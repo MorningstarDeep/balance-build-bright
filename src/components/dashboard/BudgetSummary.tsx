@@ -2,32 +2,18 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-
-const budgets = [
-  {
-    id: 1,
-    category: "Groceries",
-    spent: 3200,
-    total: 5000,
-    color: "bg-blue-500",
-  },
-  {
-    id: 2,
-    category: "Food & Drinks",
-    spent: 4500,
-    total: 6000,
-    color: "bg-purple-500",
-  },
-  {
-    id: 3,
-    category: "Transportation",
-    spent: 1200,
-    total: 3000,
-    color: "bg-green-500",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { fetchBudgets, Budget } from "@/services/budgets";
 
 export const BudgetSummary: React.FC = () => {
+  const { data: budgets = [], isLoading, error } = useQuery({
+    queryKey: ['budgets'],
+    queryFn: fetchBudgets
+  });
+
+  // Get the top 3 budgets
+  const topBudgets = budgets.slice(0, 3);
+
   return (
     <Card className="h-full">
       <CardHeader className="pb-2 flex justify-between items-center">
@@ -37,26 +23,50 @@ export const BudgetSummary: React.FC = () => {
         </a>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          {budgets.map((budget) => {
-            const percentUsed = (budget.spent / budget.total) * 100;
-            
-            return (
-              <div key={budget.id} className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-sm font-medium">{budget.category}</span>
-                  <span className="text-sm text-muted-foreground">
-                    ₹{budget.spent.toLocaleString('en-IN')} / ₹{budget.total.toLocaleString('en-IN')}
-                  </span>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-48">
+            <div className="w-8 h-8 border-t-2 border-b-2 border-gray-900 rounded-full animate-spin"></div>
+          </div>
+        ) : error ? (
+          <div className="text-center py-8">
+            <p className="text-red-500">Failed to load budgets</p>
+          </div>
+        ) : topBudgets.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No budgets yet</p>
+            <a href="/budget" className="text-primary hover:underline block mt-2">
+              Create your first budget
+            </a>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {topBudgets.map((budget: Budget) => {
+              const spent = budget.limit_amount - budget.remaining;
+              const percentUsed = (spent / budget.limit_amount) * 100;
+              
+              return (
+                <div key={budget.id} className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-sm font-medium">{budget.name}</span>
+                    <span className="text-sm text-muted-foreground">
+                      ₹{spent.toLocaleString('en-IN')} / ₹{budget.limit_amount.toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                  <Progress 
+                    value={percentUsed} 
+                    className={`h-2 ${percentUsed > 90 ? 'bg-red-500' : percentUsed > 70 ? 'bg-yellow-500' : 'bg-blue-500'}`}
+                  />
                 </div>
-                <Progress 
-                  value={percentUsed} 
-                  className={`h-2 ${budget.color}`}
-                />
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+            
+            {topBudgets.length > 0 && (
+              <a href="/budget" className="text-sm text-primary hover:underline block text-center mt-4">
+                View all budgets
+              </a>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
