@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, LogOut, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -10,18 +10,27 @@ export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, signOut } = useAuth();
 
-  const navigation = [
-    { name: "Dashboard", href: "/" },
-    { name: "Transactions", href: "/transactions" },
-    { name: "Budget", href: "/budget" },
-    { name: "Savings", href: "/savings" },
-    { name: "Analytics", href: "/analytics" },
-    { name: "Profile", href: "/profile" },
-  ];
+  // Hide Navbar on authentication pages
+  if (location.pathname === "/auth" || location.pathname === "/signup") {
+    return null;
+  }
 
-  const isActive = (path: string) => {
-    return location.pathname === path;
-  };
+  const navigation = useMemo(
+    () => [
+      { name: "Dashboard", href: "/" },
+      { name: "Transactions", href: "/transactions" },
+      { name: "Budget", href: "/budget" },
+      { name: "Savings", href: "/savings" },
+      { name: "Analytics", href: "/analytics" },
+      { name: "Profile", href: "/profile" },
+    ],
+    []
+  );
+
+  const isActive = useCallback(
+    (path: string) => location.pathname === path,
+    [location.pathname]
+  );
 
   const handleSignOut = async () => {
     await signOut();
@@ -29,13 +38,22 @@ export const Navbar: React.FC = () => {
     navigate("/auth");
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      window.location.reload();
+    }, 300000); // Refresh every 5 minutes
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <nav className="bg-white/70 backdrop-blur-lg text-black border-b border-gray-200 shadow-none transition-all duration-500">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <span className="font-bold text-2xl tracking-tight text-primary">Spendora</span>
+              <span className="font-bold text-2xl tracking-tight text-primary">
+                Spendora
+              </span>
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
@@ -45,8 +63,8 @@ export const Navbar: React.FC = () => {
                     to={item.href}
                     className={`px-3 py-2 rounded-md text-sm font-medium ${
                       isActive(item.href)
-                        ? "bg-gray-900 text-white"
-                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                        ? "bg-black text-white"
+                        : "text-black hover:bg-gray-700 hover:text-white"
                     }`}
                   >
                     {item.name}
@@ -60,14 +78,17 @@ export const Navbar: React.FC = () => {
               <div className="ml-3 relative">
                 <div className="flex items-center space-x-4">
                   <div className="text-sm font-medium text-white">
-                    <span>Hello, {user?.email?.split('@')[0]}</span>
+                    <span>Hello, {user?.email?.split("@")[0]}</span>
                   </div>
                   <button
                     onClick={handleSignOut}
-                    className="p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                    className="p-2 rounded-full text-black hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white transition-colors flex items-center"
                     title="Sign out"
                   >
-                    <LogOut className="h-5 w-5" />
+                    <div className="flex items-center space-x-2">
+                      <LogOut className="h-5 w-5 transition-colors" />
+                      <span>Logout</span>
+                    </div>
                   </button>
                 </div>
               </div>
@@ -99,8 +120,8 @@ export const Navbar: React.FC = () => {
                 to={item.href}
                 className={`block px-3 py-2 rounded-md text-base font-medium ${
                   isActive(item.href)
-                    ? "bg-gray-900 text-white"
-                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    ? "bg-black text-white"
+                    : "text-black hover:bg-gray-700 hover:text-white"
                 }`}
                 onClick={() => setIsOpen(false)}
               >
@@ -109,7 +130,7 @@ export const Navbar: React.FC = () => {
             ))}
             <button
               onClick={handleSignOut}
-              className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-black hover:bg-gray-700 hover:text-white"
             >
               Sign Out
             </button>
@@ -118,4 +139,13 @@ export const Navbar: React.FC = () => {
       )}
     </nav>
   );
+};
+
+export const tsconfig = {
+  compilerOptions: {
+    jsx: "react-jsx",
+    moduleResolution: "node",
+    esModuleInterop: true,
+    allowSyntheticDefaultImports: true,
+  },
 };

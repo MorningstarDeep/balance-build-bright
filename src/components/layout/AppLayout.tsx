@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Sidebar } from "./Sidebar"; // Use app sidebar for navigation
 // Removed: Navbar import to avoid duplicate navigation
