@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import TransactionDialog from "@/components/transactions/TransactionDialog";
@@ -15,7 +14,6 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ onActionComplete }) 
   const [isBudgetDialogOpen, setIsBudgetDialogOpen] = useState(false);
   const [isSavingsDialogOpen, setIsSavingsDialogOpen] = useState(false);
 
-  // Optional callback after successful action (can force Dashboard to refresh)
   const handleSuccess = () => {
     setIsIncomeDialogOpen(false);
     setIsExpenseDialogOpen(false);
@@ -26,38 +24,38 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ onActionComplete }) 
 
   return (
     <>
-      <div className="h-64 rounded-xl border border-gray-200 bg-gradient-to-br from-white via-neutral-50 to-indigo-50 shadow-lg flex flex-col items-center justify-center overflow-hidden relative animate-fade-in transition-all">
-        <p className="text-lg font-semibold text-gray-900 text-center mb-4 tracking-tight">
+      <div className="rounded-2xl border-none bg-white/60 shadow-xl glass-morphism p-6 flex flex-col items-center justify-center relative transition-all duration-500 min-h-[270px]">
+        <p className="text-xl font-bold mb-6 text-gray-800 text-center tracking-tight bg-gradient-to-tr from-primary to-blue-400 text-transparent bg-clip-text">
           Quick Actions
         </p>
-        <div className="grid grid-cols-2 gap-3 w-full max-w-xs">
+        <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
           <Button
             variant="ghost"
-            className="border border-gray-200/70 hover:bg-primary/5 hover:border-primary/40 transition"
+            className="border border-transparent hover:bg-gradient-to-r hover:from-blue-50 hover:to-green-50 hover:border-primary/40 rounded-lg text-green-700 font-bold text-base hover-scale transition-all duration-200"
             onClick={() => setIsIncomeDialogOpen(true)}
           >
-            + Add Income
+            + Income
           </Button>
           <Button
             variant="ghost"
-            className="border border-gray-200/70 hover:bg-primary/5 hover:border-primary/40 transition"
+            className="border border-transparent hover:bg-gradient-to-r hover:from-rose-50 hover:to-yellow-50 hover:border-primary/40 rounded-lg text-rose-700 font-bold text-base hover-scale transition-all duration-200"
             onClick={() => setIsExpenseDialogOpen(true)}
           >
-            - Add Expense
+            – Expense
           </Button>
           <Button
             variant="ghost"
-            className="border border-gray-200/70 hover:bg-primary/5 hover:border-primary/40 transition"
+            className="border border-transparent hover:bg-gradient-to-r hover:from-yellow-50 hover:to-blue-50 hover:border-primary/40 rounded-lg text-blue-700 font-bold text-base hover-scale transition-all duration-200"
             onClick={() => setIsBudgetDialogOpen(true)}
           >
-            &#128197; Add Budget
+            💸 Budget
           </Button>
           <Button
             variant="ghost"
-            className="border border-gray-200/70 hover:bg-primary/5 hover:border-primary/40 transition"
+            className="border border-transparent hover:bg-gradient-to-r hover:from-emerald-50 hover:to-indigo-50 hover:border-primary/40 rounded-lg text-indigo-700 font-bold text-base hover-scale transition-all duration-200"
             onClick={() => setIsSavingsDialogOpen(true)}
           >
-            &#128176; Add Saving
+            🏦 Saving
           </Button>
         </div>
       </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, LogOut, User } from "lucide-react";
@@ -31,12 +30,12 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-black text-white border-b border-gray-800">
+    <nav className="bg-white/70 backdrop-blur-lg text-black border-b border-gray-200 shadow-none transition-all duration-500">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <span className="font-bold text-xl">FinanceTracker</span>
+              <span className="font-bold text-2xl tracking-tight text-primary">Spendora</span>
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
@@ -91,7 +90,6 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
