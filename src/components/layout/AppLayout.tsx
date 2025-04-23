@@ -1,7 +1,6 @@
 
 import React from "react";
-import { Sidebar } from "./Sidebar";
-import { Header } from "./Header";
+import { Navbar } from "./Navbar";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -9,14 +8,11 @@ interface AppLayoutProps {
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-      <div className="flex flex-col flex-1 overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-auto p-4 md:p-6">
-          {children}
-        </main>
-      </div>
+    <div className="flex flex-col h-screen bg-white">
+      <Navbar />
+      <main className="flex-1 overflow-auto p-4 md:p-6">
+        {children}
+      </main>
     </div>
   );
 };
